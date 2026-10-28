@@ -22,3 +22,37 @@ que al hacer un .join justo después del .start, el main esperara a que el prime
 el siguiente, y asi sucesivamente.
 
 #### -  ¿Cuántas veces entra cada torno en el synchronized? ¿Podrías hacer que entrara una sola vez, al final?
+
+## R2 - Cadena de montaje
+
+### `Estacion.java`
+Implementa Runnable para poder crear un hilo de tipo Estacion. Tiene un constructor para poder pasar el nombre del hilo y
+una lista de objetos Thread por los que se quiera esperar a que terminen, en este caso Corte y Ensamblaje.
+
+Cada estacion da 5 pasos y termina
+
+### `Main.java`
+Se crea una lista tipo Thread para los hilos por lo que se quiera esperar, en este caso Pintura quiere esperar a que
+Corte y ensamblaje terminen.
+
+## R3 - Cadena de montaje
+
+### ¿Qué salida producirá este código? ¿Puede cambiar de una ejecución a otra? Justifica la respuesta.
+El código imprime el nombre del hilo A y del hilo B del 1 al 3, durmiéndose 0.2s en cada iteración. Como el hilo
+A tiene un join después del start, este no dejara que el hilo B empieze a imprimirse hasta que acabe. Por esto miosmo tambien. 
+el print "Fin del main" se imprime antes de que el hilo B empieze aunque en el codigo este antes, ya que el hilo B sigue 
+esperando a que el hilo A termine.
+
+El codigo no puede cambiar entre ejecuciones porque al estar programado de esta manera, no hay concurrencia y el resultado
+siempre es fijo.
+
+## R4 - Cadena de montaje
+### a) ¿Funciona este código? ¿Qué pasa al ejecutarlo? ¿Cómo lo arreglarías? Justifica la respuesta.
+No, se quedaria en un bucle infinito ya que el Visitante al llamar a "esperarApertura()" con Thread.sleep,
+el candado de synchonized nunca se libera, y el hilo Portero al querer acceder a abrir() se queda BLOCKED. 
+La forma mas facil de arreglarlo seria cambiar el sleep por un wait() para que el Visitante suelte el candado
+y el Portero pueda cambiar la condición del bucle a true
+
+### b) Un compañero lo «arregla» así: cambia el sleep() por wait(), añade notifyAll() en abrir() y, de paso, quita los dos synchronized. ¿Funciona ahora? ¿Qué pasa al ejecutarlo? Justifica la respuesta.
+Para empezar el codigo daria un error de ejecucion porque no se puede usar wait() ni notifyAll() 
+sin que las funciones sean synchronized. Con eso corregido el codigo funcionaria sin problemas.

@@ -2,6 +2,7 @@ package R4;
 
 class Puerta {
     private boolean abierta = false;
+
     public synchronized void esperarApertura()
             throws InterruptedException {
         while (!abierta) {
